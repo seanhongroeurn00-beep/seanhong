@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>People Registry Directory System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 min-h-screen text-gray-800 font-sans">
+
+    <header class="bg-blue-600 text-white shadow-md p-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-wide">👥 System Registry Directory</h1>
+            <span class="text-sm bg-blue-700 px-3 py-1 rounded-full" id="api-status">Connecting...</span>
+        </div>
+    </header>
+
+    <main class="container mx-auto p-4 md:p-6 space-y-6">
+        
+        <section class="bg-white p-5 rounded-lg shadow-sm border border-gray-200">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 border-b pb-4 gap-4">
+                <h2 class="text-lg font-semibold text-gray-700">🔍 Live Multi-Filtering Search</h2>
+                <button id="open-add-modal-btn" class="bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded text-sm transition shadow-sm">
+                    ➕ Register New Person
+                </button>
+            </div>
+
+            <form id="search-form" class="grid grid-cols-1 md:grid-cols-4 gap-4" onsubmit="event.preventDefault();">
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Search by Name:</label>
+                    <input type="text" id="searchName" placeholder="Type a name..." class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Filter by Province:</label>
+                    <select id="searchProvince" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                        <option value="">All Provinces (Cambodia)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Filter Max Age:</label>
+                    <input type="number" id="searchAge" placeholder="e.g. 50" min="0" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div class="flex items-end">
+                    <button type="button" id="reset-filters" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded text-sm transition">
+                        Reset Filters View
+                    </button>
+                </div>
+            </form>
+        </section>
+
+        <section class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+            <div class="p-4 bg-gray-50 border-b flex justify-between items-center">
+                <h2 class="font-semibold text-gray-700">📋 Detailed Information Rows</h2>
+                <span class="text-xs text-gray-500 font-medium" id="record-count">Showing 0 profiles</span>
+            </div>
+            
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm border-collapse">
+                    <thead>
+                        <tr class="bg-gray-100 border-b border-gray-200 text-gray-600 uppercase text-xs tracking-wider">
+                            <th class="p-3">ID</th>
+                            <th class="p-3">Surname</th>
+                            <th class="p-3">Given Name</th>
+                            <th class="p-3">Calculated Age</th>
+                            <th class="p-3">Gender</th>
+                            <th class="p-3">Resident Province</th>
+                            <th class="p-3 text-center">Management Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="peopleTableBody" class="divide-y divide-gray-100">
+                        <tr>
+                            <td colspan="7" class="p-8 text-center text-gray-400 italic">Assembling framework linkages...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <div id="personModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center hidden" style="display: none;">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-md overflow-hidden transform transition-all">
+            
+            <div class="bg-gray-50 p-4 border-b flex justify-between items-center">
+                <h3 id="modalTitle" class="text-base font-semibold text-gray-700">Register Profile</h3>
+                <button type="button" id="close-modal-btn" class="text-gray-400 hover:text-gray-600 text-xl font-bold">&times;</button>
+            </div>
+            
+            <form id="personForm" class="p-4 space-y-4">
+                <input type="hidden" id="personId">
+                
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Surname:</label>
+                    <input type="text" id="surname" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Given Name:</label>
+                    <input type="text" id="givenName" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Date of Birth:</label>
+                    <input type="date" id="dob" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Gender Allocation:</label>
+                    <select id="gender" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <option value="M">Male</option>
+                        <option value="F">Female</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-gray-500">Resident Province Target:</label>
+                    <select id="modalProvinceSelect" class="w-full mt-1 p-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                        <option value="">-- Select Province --</option>
+                    </select>
+                </div>
+                
+                <div class="pt-2 border-t flex justify-end space-x-2">
+                    <button type="button" id="cancel-modal-btn" class="bg-gray-100 text-gray-700 py-2 px-4 rounded text-sm font-medium transition hover:bg-gray-200">Cancel</button>
+                    <button type="submit" id="modal-submit-btn" class="bg-blue-600 text-white py-2 px-5 rounded text-sm font-medium shadow transition hover:bg-blue-700">Save Record Entry</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
